@@ -16,7 +16,7 @@
 #define PAGE_TABLE_SIZE (4*1024*1024) /* 4mb */
 
 /* Some helpful macros */
-#define pg_num_to_idx(num) (num / 2048 * 4096 + num % 4096)
+#define pg_num_to_idx(num) (((num / 512 * 4096) / 4) + (num % 512))
 #define get_page(page_table, num) \
 		page_table[pg_num_to_idx(num)]
 
