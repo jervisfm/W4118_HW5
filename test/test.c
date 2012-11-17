@@ -15,12 +15,18 @@
 
 #define PAGE_TABLE_SIZE (4*1024*1024) /* 4mb */
 
+/* Some helpful macros */
+#define pg_num_to_idx(num) (num / 2048 * 4096 + num % 4096)
+#define get_page(page_table, num) \
+		page_table[pg_num_to_idx(num)]
+
+
 /* Wrapper around expose_page_table() system call - do not modify! */
 static unsigned int *expose_page_table()
 {
 	int i, fault;
 	int fd = open("/dev/zero", O_RDONLY);
-	unsigned int *addr = mmap(NULL, PAGE_TABLE_SIZE, PROT_READ,
+	unsigned int *addr = mmap(NULL, PAGE_TABLE_SIZE * 2, PROT_READ,
 				 MAP_SHARED, fd, 0);
 	close(fd);
 	if (addr == MAP_FAILED) {
@@ -28,7 +34,7 @@ static unsigned int *expose_page_table()
 		return NULL;
 	}
 	/* Fault now to avoid handling in kernel */
-	for (i = 0; i < PAGE_TABLE_SIZE/4; ++i)
+	for (i = 0; i < (PAGE_TABLE_SIZE * 2) / 4; ++i)
 		fault = addr[i];
 	if (syscall(__NR_expose_page_table, addr) < 0) {
 		perror("expose_page_table syscall failed");
