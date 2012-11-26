@@ -844,4 +844,6 @@ asmlinkage long sys_open_by_handle_at(int mountdirfd,
 				      struct file_handle __user *handle,
 				      int flags);
 asmlinkage long sys_setns(int fd, int nstype);
+/*customer system call to expose a user's process space.  */
+asmlinkage long sys_expose_page_table(void* addr);
 #endif
