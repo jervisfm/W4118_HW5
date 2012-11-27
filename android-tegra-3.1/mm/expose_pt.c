@@ -5,7 +5,7 @@
  * November 26th
  */
 
-
+#include <linux/syscalls.h>
 
 
 SYSCALL_DEFINE1(expose_page_table, void *, addr) {
@@ -14,4 +14,5 @@ SYSCALL_DEFINE1(expose_page_table, void *, addr) {
 		return -EINVAL;
 
 	printk("Yah i can call expose table\n");
+	return 0;
 }
